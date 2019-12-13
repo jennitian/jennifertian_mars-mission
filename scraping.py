@@ -56,6 +56,29 @@ def featured_image(browser):
     img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
     return img_url
 
+def high_res_images(browser):
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url)
+    #find full image buttom
+    image_list = browser.find('div', class_='collapsible results')
+    high_res_images = []
+    for image in image_list:
+        full_image = image_list.find('img', class_='thumb')
+        full_image.click()
+        html = browser.html
+        soup = BeautifulSoup(html, 'html.parser')
+        try:
+            img_url_rel = soup.select_one()('div.downloads img').get('src')
+            img_title = soup.find("h2", class_='title').get_text()
+        except AttributeError:
+            return None
+        img_url = f'https://astrogeology.usgs.gov/{img_url_rel}'
+        high_res_images.appehnd({img_title:img_url_})
+    return high_res_images
+
+
+    
+
 def mars_facts():
     # Add try/except for error handling
     try:
