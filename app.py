@@ -19,7 +19,7 @@ def scrape():
    #new variable for mongo db
    mars = mongo.db.mars
    #new variable to scrape data
-   mars_data = scrape_mars.scrape_all()
+   mars_data = scraping.scrape_all()
    #updating mars_data db in mongo
    mars.update({}, mars_data, upsert=True)
    return "Scraping Successful!"
