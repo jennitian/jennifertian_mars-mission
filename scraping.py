@@ -56,26 +56,27 @@ def featured_image(browser):
     img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
     return img_url
 
-def high_res_images(browser):
+def hemispheres(browser):
     url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     browser.visit(url)
     #find full image buttom
-    image_list = browser.find('div', class_='collapsible results')
     high_res_images = []
-    for image in image_list:
-        full_image = image_list.find('img', class_='thumb')
-        full_image.click()
+    i = 0
+    for i in range(0,4):
+        image_link = browser.find_link_by_partial_text('Hemisphere Enhanced')[i]
+        image_link.click()
         html = browser.html
         soup = BeautifulSoup(html, 'html.parser')
-        try:
-            img_url_rel = soup.select_one()('div.downloads img').get('src')
-            img_title = soup.find("h2", class_='title').get_text()
-        except AttributeError:
-            return None
-        img_url = f'https://astrogeology.usgs.gov/{img_url_rel}'
-        high_res_images.appehnd({img_title:img_url_})
+        #get url
+        img_url = soup.select_one('div.downloads a').get('href')
+        #get title
+        img_title = soup.find("h2", class_= 'title').get_text()
+        #append list with title: url
+        high_res_images.append({img_title: img_url})
+        #start from front page again
+        browser.visit(url)
+        i += 1
     return high_res_images
-
 
     
 
@@ -97,13 +98,15 @@ def scrape_all():
     # Initiate headless driver for deployment
     browser = Browser("chrome", executable_path="/usr/local/bin/chromedriver", headless=True)
     news_title, news_paragraph = mars_news(browser)
+    hemispheres_list = hemispheres(browser)
     # Run all scraping functions and store results in dictionary
     data = {
         "news_title": news_title,
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now()}
+        "last_modified": dt.datetime.now(),
+        "hemispheres": hemispheres_list}
     return data
 
 if __name__ == "__main__":

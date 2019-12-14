@@ -46,6 +46,21 @@
                 <h4>Mars Facts</h4>
                 {{ mars.facts | safe }}
             </div>
+            <!--Hemispheres-->
+            <div class="col-md-8">
+                <h2>Hemispheres</h2>
+                <ul>
+                    {% for dict in mars.hemispheres %}
+                        {% for key, value in dict.items() %}
+                        <li>
+                            <h4>{{key}}</h4>
+                            <img src="{{ value }}">
+                        </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+
+            </div>
         </div>
     </div>
 </body>
